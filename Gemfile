@@ -7,7 +7,7 @@ group :development do
   gem 'jekyll-date-format', '~> 1.0'
   gem 'jekyll-sitemap'
   gem 'rdiscount', '~> 2.0'
-  gem 'RedCloth', '~> 4.2.9'
+  gem 'RedCloth', '~> 4.2.9', :platforms => :mswin
   gem 'haml', '~> 4.0'
   gem 'compass', '~> 0.12.2'
   gem 'sass-globbing', '~> 1.0.0'
