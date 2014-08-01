@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Jdo | My Tech Blog]]></title>
   <link href="http://andresesfm.github.io/blog/categories/jdo/atom.xml" rel="self"/>
   <link href="http://andresesfm.github.io/"/>
-  <updated>2014-07-31T21:39:22-06:00</updated>
+  <updated>2014-07-31T21:41:42-06:00</updated>
   <id>http://andresesfm.github.io/</id>
   <author>
     <name><![CDATA[Andres Aguilar]]></name>
@@ -18,7 +18,72 @@
     <link href="http://andresesfm.github.io/blog/2014/07/31/using-objectify-alongside-jdo/"/>
     <updated>2014-07-31T00:00:00-06:00</updated>
     <id>http://andresesfm.github.io/blog/2014/07/31/using-objectify-alongside-jdo</id>
-    <content type="html"><![CDATA[<p>Hello World!</p>
+    <content type="html"><![CDATA[<p>When migrating from JDO to Objectify, It&rsquo;s often the case where you need them to co-exist during the transition. Here is my case:</p>
+
+<p>Suppose that you have an entity called <code>UserProfile</code> defined as follows:
+&#8220;`java
+@PersistenceCapable
+public class UserProfile implements Serializable {</p>
+
+<pre><code>@PrimaryKey
+@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
+private Key key;
+@Persistent
+public String photoPath;
+@Persistent
+public String userNickname;
+</code></pre>
+
+<p>}</p>
+
+<pre><code>A pretty normal JDO-anotated entity. Now reading online people say that Ofy and JDO can co-exist. So I tried something like:
+</code></pre>
+
+<p>@Entity
+@PersistenceCapable
+public class UserProfile implements Serializable {
+    @Ignore
+    @PrimaryKey
+    @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
+    private Key key;</p>
+
+<pre><code>@Id
+public Long oid;
+
+@Persistent
+public String photoPath;
+@Indexed
+@Persistent
+public String userNickname;
+</code></pre>
+
+<p>}</p>
+
+<p>&#8220;`</p>
+
+<p>Notice that I&rsquo;m explicitly ignoring the key. However I get the following vey cryptic exception:</p>
+
+<pre><code>
+java.lang.NoClassDefFoundError: Could not initialize class com.x.model.OfyService
+</code></pre>
+
+
+<p>The solution I found was to leave UserProfile intact and create a new class:
+&#8220;`java
+@Entity(name=&ldquo;UserProfile&rdquo;)
+public class UserProfileOfy implements Serializable {
+    @Id
+    public Long oid;</p>
+
+<pre><code>public String photoPath;
+@Indexed
+public String userNickname;
+</code></pre>
+
+<p>}</p>
+
+<p><code>``
+Notice the</code>name<code>parameter in the</code>@Entity` anotation.</p>
 ]]></content>
   </entry>
   
