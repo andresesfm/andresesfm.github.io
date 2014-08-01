@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Jdo | My Tech Blog]]></title>
   <link href="http://andresesfm.github.io/blog/categories/jdo/atom.xml" rel="self"/>
   <link href="http://andresesfm.github.io/"/>
-  <updated>2014-07-31T21:41:42-06:00</updated>
+  <updated>2014-07-31T21:45:06-06:00</updated>
   <id>http://andresesfm.github.io/</id>
   <author>
     <name><![CDATA[Andres Aguilar]]></name>
@@ -36,7 +36,7 @@ public String userNickname;
 
 <p>}</p>
 
-<pre><code>A pretty normal JDO-anotated entity. Now reading online people say that Ofy and JDO can co-exist. So I tried something like:
+<pre><code>A pretty normal JDO-annotated entity. Now reading on-line people say that Ofy and JDO can co-exist. So I tried something like:
 </code></pre>
 
 <p>@Entity
@@ -83,7 +83,7 @@ public String userNickname;
 <p>}</p>
 
 <p><code>``
-Notice the</code>name<code>parameter in the</code>@Entity` anotation.</p>
+Notice the</code>name<code>parameter in the</code>@Entity` annotation.</p>
 ]]></content>
   </entry>
   
