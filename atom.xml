@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[My Tech Blog]]></title>
+  <link href="http://andresesfm.github.io/atom.xml" rel="self"/>
+  <link href="http://andresesfm.github.io/"/>
+  <updated>2014-08-01T08:11:56-06:00</updated>
+  <id>http://andresesfm.github.io/</id>
+  <author>
+    <name><![CDATA[Andres Aguilar]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Using Objectify Alongside JDO]]></title>
+    <link href="http://andresesfm.github.io/blog/2014/07/31/using-objectify-alongside-jdo/"/>
+    <updated>2014-07-31T00:00:00-06:00</updated>
+    <id>http://andresesfm.github.io/blog/2014/07/31/using-objectify-alongside-jdo</id>
+    <content type="html"><![CDATA[<p>When migrating from JDO to Objectify, It&rsquo;s often the case where you need them to co-exist during the transition. Here is my case:</p>
+
+<p>Suppose that you have an entity called <code>UserProfile</code> defined as follows:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="nd">@PersistenceCapable</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">UserProfile</span> <span class="kd">implements</span> <span class="n">Serializable</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@PrimaryKey</span>
+</span><span class='line'>    <span class="nd">@Persistent</span><span class="o">(</span><span class="n">valueStrategy</span> <span class="o">=</span> <span class="n">IdGeneratorStrategy</span><span class="o">.</span><span class="na">IDENTITY</span><span class="o">)</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">Key</span> <span class="n">key</span><span class="o">;</span>
+</span><span class='line'>    <span class="nd">@Persistent</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="n">photoPath</span><span class="o">;</span>
+</span><span class='line'>    <span class="nd">@Persistent</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="n">userNickname</span><span class="o">;</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>A pretty normal JDO-annotated entity. Now reading on-line people say that Ofy and JDO can co-exist. So I tried something like:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="nd">@Entity</span>
+</span><span class='line'><span class="nd">@PersistenceCapable</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">UserProfile</span> <span class="kd">implements</span> <span class="n">Serializable</span> <span class="o">{</span>
+</span><span class='line'>    <span class="nd">@Ignore</span>
+</span><span class='line'>    <span class="nd">@PrimaryKey</span>
+</span><span class='line'>    <span class="nd">@Persistent</span><span class="o">(</span><span class="n">valueStrategy</span> <span class="o">=</span> <span class="n">IdGeneratorStrategy</span><span class="o">.</span><span class="na">IDENTITY</span><span class="o">)</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">Key</span> <span class="n">key</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Id</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">Long</span> <span class="n">oid</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Persistent</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="n">photoPath</span><span class="o">;</span>
+</span><span class='line'>    <span class="nd">@Indexed</span>
+</span><span class='line'>    <span class="nd">@Persistent</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="n">userNickname</span><span class="o">;</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Notice that I&rsquo;m explicitly ignoring the key. However I get the following vey cryptic exception:</p>
+
+<pre><code>
+java.lang.NoClassDefFoundError: Could not initialize class com.x.model.OfyService
+</code></pre>
+
+
+<p>The solution I found was to leave UserProfile intact and create a new class:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="nd">@Entity</span><span class="o">(</span><span class="n">name</span><span class="o">=</span><span class="s">&quot;UserProfile&quot;</span><span class="o">)</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">UserProfileOfy</span> <span class="kd">implements</span> <span class="n">Serializable</span> <span class="o">{</span>
+</span><span class='line'>    <span class="nd">@Id</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">Long</span> <span class="n">oid</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="n">photoPath</span><span class="o">;</span>
+</span><span class='line'>    <span class="nd">@Indexed</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="n">userNickname</span><span class="o">;</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Notice the <code>name</code> parameter in the <code>@Entity</code> annotation.</p>
+]]></content>
+  </entry>
+  
+</feed>
