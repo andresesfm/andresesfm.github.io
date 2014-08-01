@@ -1,24 +1,82 @@
-<?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[My Tech Blog]]></title>
-  <link href="http://andresesfm.github.io/atom.xml" rel="self"/>
-  <link href="http://andresesfm.github.io/"/>
-  <updated>2014-08-01T08:38:05-06:00</updated>
-  <id>http://andresesfm.github.io/</id>
-  <author>
-    <name><![CDATA[Andres Aguilar]]></name>
-    
-  </author>
-  <generator uri="http://octopress.org/">Octopress</generator>
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Objectify OnLoad Can Be Tricky - My Tech Blog</title>
+  <meta name="author" content="Andres Aguilar">
 
   
-  <entry>
-    <title type="html"><![CDATA[Objectify OnLoad Can Be Tricky]]></title>
-    <link href="http://andresesfm.github.io/blog/2014/08/01/objectify-onload-can-be-tricky/"/>
-    <updated>2014-08-01T08:18:30-06:00</updated>
-    <id>http://andresesfm.github.io/blog/2014/08/01/objectify-onload-can-be-tricky</id>
-    <content type="html"><![CDATA[<p>When creating a <code>Ref&lt;?&gt;</code> to another object can be tricky since, here is the scenario:</p>
+  <meta name="description" content="When creating a Ref&lt;?&gt; to another object can be tricky since, here is the scenario: I have an Entity UserPost that has a reference to &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://andresesfm.github.io/blog/2014/08/01/objectify-onload-can-be-tricky">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="My Tech Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=Open+Sans:400,700&subset=latin" rel="stylesheet" type="text/css" />
+<link href='http://fonts.googleapis.com/css?family=Noto+Serif:400,700' rel='stylesheet' type='text/css'>
+
+
+
+  
+
+</head>
+
+<body   >
+  <nav id="main-nav" role="navigation">
+<ul class="main-navigation">
+  <li><a href="/" class="nav-link">Blog</a></li>
+  <li><a href="/blog/archives" class="nav-link">Archives</a></li>
+  <li><a href="/atom.xml" class="nav-link">RSS</a></li>
+</ul>
+
+</nav>
+  
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Objectify OnLoad Can Be Tricky</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-08-01T08:18:30-06:00" pubdate data-updated="true">Aug 1<sup>st</sup>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>When creating a <code>Ref&lt;?&gt;</code> to another object can be tricky since, here is the scenario:</p>
 
 <p>I have an Entity <code>UserPost</code> that has a reference to <code>UserProfile</code> like so:</p>
 
@@ -149,120 +207,114 @@
 </span><span class='line'>    <span class="o">}</span>
 </span></code></pre></td></tr></table></div></figure>
 
-]]></content>
-  </entry>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
   
-  <entry>
-    <title type="html"><![CDATA[Using Objectify Alongside JDO]]></title>
-    <link href="http://andresesfm.github.io/blog/2014/07/31/using-objectify-alongside-jdo/"/>
-    <updated>2014-07-31T00:00:00-06:00</updated>
-    <id>http://andresesfm.github.io/blog/2014/07/31/using-objectify-alongside-jdo</id>
-    <content type="html"><![CDATA[<p>When migrating from JDO to Objectify, It&rsquo;s often the case where you need them to co-exist during the transition. Here is my case:</p>
 
-<p>Suppose that you have an entity called <code>UserProfile</code> defined as follows:</p>
+<span class="byline author vcard">Posted by <span class="fn">Andres Aguilar</span></span>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="nd">@PersistenceCapable</span>
-</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">UserProfile</span> <span class="kd">implements</span> <span class="n">Serializable</span> <span class="o">{</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@PrimaryKey</span>
-</span><span class='line'>    <span class="nd">@Persistent</span><span class="o">(</span><span class="n">valueStrategy</span> <span class="o">=</span> <span class="n">IdGeneratorStrategy</span><span class="o">.</span><span class="na">IDENTITY</span><span class="o">)</span>
-</span><span class='line'>    <span class="kd">private</span> <span class="n">Key</span> <span class="n">key</span><span class="o">;</span>
-</span><span class='line'>    <span class="nd">@Persistent</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="n">photoPath</span><span class="o">;</span>
-</span><span class='line'>    <span class="nd">@Persistent</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="n">userNickname</span><span class="o">;</span>
-</span><span class='line'><span class="o">}</span>
-</span><span class='line'>
-</span></code></pre></td></tr></table></div></figure>
+      
 
 
-<p>A pretty normal JDO-annotated entity. Now reading on-line people say that Ofy and JDO can co-exist. So I tried something like:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="nd">@Entity</span>
-</span><span class='line'><span class="nd">@PersistenceCapable</span>
-</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">UserProfile</span> <span class="kd">implements</span> <span class="n">Serializable</span> <span class="o">{</span>
-</span><span class='line'>    <span class="nd">@Ignore</span>
-</span><span class='line'>    <span class="nd">@PrimaryKey</span>
-</span><span class='line'>    <span class="nd">@Persistent</span><span class="o">(</span><span class="n">valueStrategy</span> <span class="o">=</span> <span class="n">IdGeneratorStrategy</span><span class="o">.</span><span class="na">IDENTITY</span><span class="o">)</span>
-</span><span class='line'>    <span class="kd">private</span> <span class="n">Key</span> <span class="n">key</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@Id</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="n">Long</span> <span class="n">oid</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@Persistent</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="n">photoPath</span><span class="o">;</span>
-</span><span class='line'>    <span class="nd">@Indexed</span>
-</span><span class='line'>    <span class="nd">@Persistent</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="n">userNickname</span><span class="o">;</span>
-</span><span class='line'><span class="o">}</span>
-</span><span class='line'>
-</span></code></pre></td></tr></table></div></figure>
 
 
-<p>Notice that I&rsquo;m explicitly ignoring the key. However I get the following vey cryptic exception:</p>
-
-<pre><code>
-java.lang.NoClassDefFoundError: Could not initialize class com.x.model.OfyService
-</code></pre>
 
 
-<p>The solution I found was to leave UserProfile intact and create a new class:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="nd">@Entity</span><span class="o">(</span><span class="n">name</span><span class="o">=</span><span class="s">&quot;UserProfile&quot;</span><span class="o">)</span>
-</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">UserProfileOfy</span> <span class="kd">implements</span> <span class="n">Serializable</span> <span class="o">{</span>
-</span><span class='line'>    <span class="nd">@Id</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="n">Long</span> <span class="n">oid</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="n">photoPath</span><span class="o">;</span>
-</span><span class='line'>    <span class="nd">@Indexed</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="n">userNickname</span><span class="o">;</span>
-</span><span class='line'><span class="o">}</span>
-</span><span class='line'>
-</span></code></pre></td></tr></table></div></figure>
 
 
-<p>Notice the <code>name</code> parameter in the <code>@Entity</code> annotation.</p>
-]]></content>
-  </entry>
   
-</feed>
+
+
+<time datetime="2014-08-01T08:18:30-06:00" pubdate data-updated="true">Aug 1<sup>st</sup>, 2014</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/google-app-engine/'>google app engine</a>, <a class='category' href='/blog/categories/jdo/'>jdo</a>, <a class='category' href='/blog/categories/objectify/'>objectify</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://andresesfm.github.io/blog/2014/08/01/objectify-onload-can-be-tricky/" data-via="andresesfm" data-counturl="http://andresesfm.github.io/blog/2014/08/01/objectify-onload-can-be-tricky/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2014/07/31/using-objectify-alongside-jdo/" title="Previous Post: Using Objectify alongside JDO">&laquo; Using Objectify alongside JDO</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/08/01/objectify-onload-can-be-tricky/">Objectify OnLoad Can Be Tricky</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/07/31/using-objectify-alongside-jdo/">Using Objectify Alongside JDO</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - Andres Aguilar -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

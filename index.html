@@ -9,7 +9,7 @@
   <meta name="author" content="Andres Aguilar">
 
   
-  <meta name="description" content="When migrating from JDO to Objectify, It&rsquo;s often the case where you need them to co-exist during the transition. Here is my case: Suppose that &hellip;">
+  <meta name="description" content="When creating a Ref&lt;?&gt; to another object can be tricky since, here is the scenario: I have an Entity UserPost that has a reference to &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -59,6 +59,172 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/08/01/objectify-onload-can-be-tricky/">Objectify OnLoad Can Be Tricky</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-08-01T08:18:30-06:00" pubdate data-updated="true">Aug 1<sup>st</sup>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>When creating a <code>Ref&lt;?&gt;</code> to another object can be tricky since, here is the scenario:</p>
+
+<p>I have an Entity <code>UserPost</code> that has a reference to <code>UserProfile</code> like so:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="nd">@Entity</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">UserPost</span> <span class="o">{</span>
+</span><span class='line'>    <span class="nd">@Id</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">Long</span> <span class="n">id</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@JsonIgnore</span>
+</span><span class='line'>    <span class="nd">@Index</span>
+</span><span class='line'>    <span class="nd">@Load</span><span class="o">(</span><span class="n">All</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">Ref</span><span class="o">&lt;</span><span class="n">UserProfile</span><span class="o">&gt;</span> <span class="n">user</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Ignore</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="n">userNickname</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@OnLoad</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onLoad</span><span class="o">(){</span>
+</span><span class='line'>        <span class="k">if</span><span class="o">(</span><span class="n">user</span><span class="o">!=</span><span class="kc">null</span><span class="o">){</span>
+</span><span class='line'>            <span class="n">UserProfile</span> <span class="n">userProfile</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="na">get</span><span class="o">();</span>
+</span><span class='line'>            <span class="k">if</span> <span class="o">(</span><span class="n">userProfile</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>                <span class="k">this</span><span class="o">.</span><span class="na">userNickname</span> <span class="o">=</span> <span class="n">userProfile</span><span class="o">.</span><span class="na">userNickname</span><span class="o">;</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setUserRef</span><span class="o">(</span><span class="n">Ref</span><span class="o">&lt;</span><span class="n">UserProfile</span><span class="o">&gt;</span> <span class="n">userRef</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">user</span> <span class="o">=</span> <span class="n">userRef</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">All</span> <span class="o">{</span>
+</span><span class='line'>    <span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The problem then was that <code>userNickname</code> was null sometimes even when <code>user</code> was being set. After some trial and error I found this post <a href="https://groups.google.com/forum/#!topic/objectify-appengine/TT27QyLGYPI">Google Groups</a> where they mention the fact that @OnLoad only gets called when the Entity is not found in the session.</p>
+
+<p>My solution: call onLoad directly when setting the reference. That makes that instance to be usable right away. But at the same it will be loaded when needed.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="nd">@Entity</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">UserPost</span> <span class="o">{</span>
+</span><span class='line'>    <span class="nd">@Id</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">Long</span> <span class="n">id</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@JsonIgnore</span>
+</span><span class='line'>    <span class="nd">@Index</span>
+</span><span class='line'>    <span class="nd">@Load</span><span class="o">(</span><span class="n">All</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">Ref</span><span class="o">&lt;</span><span class="n">UserProfile</span><span class="o">&gt;</span> <span class="n">user</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Ignore</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="n">userNickname</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@OnLoad</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onLoad</span><span class="o">(){</span>
+</span><span class='line'>        <span class="k">if</span><span class="o">(</span><span class="n">user</span><span class="o">!=</span><span class="kc">null</span><span class="o">){</span>
+</span><span class='line'>            <span class="n">UserProfile</span> <span class="n">userProfile</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="na">get</span><span class="o">();</span>
+</span><span class='line'>            <span class="k">if</span> <span class="o">(</span><span class="n">userProfile</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>                <span class="k">this</span><span class="o">.</span><span class="na">userNickname</span> <span class="o">=</span> <span class="n">userProfile</span><span class="o">.</span><span class="na">userNickname</span><span class="o">;</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setUserRef</span><span class="o">(</span><span class="n">Ref</span><span class="o">&lt;</span><span class="n">UserProfile</span><span class="o">&gt;</span> <span class="n">userRef</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">user</span> <span class="o">=</span> <span class="n">userRef</span><span class="o">;</span>
+</span><span class='line'>      <span class="n">onLoad</span><span class="o">();</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">All</span> <span class="o">{</span>
+</span><span class='line'>    <span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -211,6 +377,10 @@ java.lang.NoClassDefFoundError: Could not initialize class com.x.model.OfyServic
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/08/01/objectify-onload-can-be-tricky/">Objectify OnLoad Can Be Tricky</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2014/07/31/using-objectify-alongside-jdo/">Using Objectify Alongside JDO</a>

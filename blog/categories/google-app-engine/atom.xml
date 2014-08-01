@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Google App Engine | My Tech Blog]]></title>
   <link href="http://andresesfm.github.io/blog/categories/google-app-engine/atom.xml" rel="self"/>
   <link href="http://andresesfm.github.io/"/>
-  <updated>2014-08-01T08:11:56-06:00</updated>
+  <updated>2014-08-01T08:38:05-06:00</updated>
   <id>http://andresesfm.github.io/</id>
   <author>
     <name><![CDATA[Andres Aguilar]]></name>
@@ -12,6 +12,87 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Objectify OnLoad Can Be Tricky]]></title>
+    <link href="http://andresesfm.github.io/blog/2014/08/01/objectify-onload-can-be-tricky/"/>
+    <updated>2014-08-01T08:18:30-06:00</updated>
+    <id>http://andresesfm.github.io/blog/2014/08/01/objectify-onload-can-be-tricky</id>
+    <content type="html"><![CDATA[<p>When creating a <code>Ref&lt;?&gt;</code> to another object can be tricky since, here is the scenario:</p>
+
+<p>I have an Entity <code>UserPost</code> that has a reference to <code>UserProfile</code> like so:
+&#8220;`java
+@Entity
+public class UserPost {
+    @Id
+    public Long id;</p>
+
+<pre><code>@JsonIgnore
+@Index
+@Load(All.class)
+private Ref&lt;UserProfile&gt; user;
+
+@Ignore
+public String userNickname;
+
+@OnLoad
+public void onLoad(){
+    if(user!=null){
+        UserProfile userProfile = user.get();
+        if (userProfile != null) {
+            this.userNickname = userProfile.userNickname;
+        }
+    }
+}
+
+public void setUserRef(Ref&lt;UserProfile&gt; userRef) {
+    this.user = userRef;
+}
+
+public static class All {
+}
+</code></pre>
+
+<pre><code>The problem then was that `userNickname` was null sometimes even when `user` was being set. After some trial and error I found this post [Google Groups](https://groups.google.com/forum/#!topic/objectify-appengine/TT27QyLGYPI) where they mention the fact that @OnLoad only gets called when the Entity is not found in the session. 
+
+My solution: call onLoad directly when setting the reference. That makes that instance to be usable right away. But at the same it will be loaded when needed.
+</code></pre>
+
+<p>@Entity
+public class UserPost {
+    @Id
+    public Long id;</p>
+
+<pre><code>@JsonIgnore
+@Index
+@Load(All.class)
+private Ref&lt;UserProfile&gt; user;
+
+@Ignore
+public String userNickname;
+
+@OnLoad
+public void onLoad(){
+    if(user!=null){
+        UserProfile userProfile = user.get();
+        if (userProfile != null) {
+            this.userNickname = userProfile.userNickname;
+        }
+    }
+}
+
+public void setUserRef(Ref&lt;UserProfile&gt; userRef) {
+    this.user = userRef;
+    onLoad();
+}
+
+public static class All {
+}
+</code></pre>
+
+<p>&#8220;`</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Using Objectify Alongside JDO]]></title>
