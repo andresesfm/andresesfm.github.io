@@ -1,0 +1,3 @@
+[submodule ".themes/sofreshandsogreen"]
+	path = .themes/sofreshandsogreen
+	url = https://github.com/johnkeith/sofreshandsogreen
