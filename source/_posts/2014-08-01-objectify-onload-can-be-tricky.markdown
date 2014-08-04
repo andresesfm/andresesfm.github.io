@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Objectify OnLoad can be tricky"
+title: "Objectify's OnLoad can be tricky"
 date: 2014-08-01 08:18:30 -0600
 comments: true
 categories: 
