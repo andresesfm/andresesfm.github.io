@@ -1,3 +1,6 @@
 [submodule ".themes/sofreshandsogreen"]
 	path = .themes/sofreshandsogreen
 	url = https://github.com/johnkeith/sofreshandsogreen
+[submodule ".themes/boldandblue"]
+	path = .themes/boldandblue
+	url = https://github.com/johnkeith/boldandblue
