@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Objectify | My Tech Blog]]></title>
   <link href="http://andresesfm.github.io/blog/categories/objectify/atom.xml" rel="self"/>
   <link href="http://andresesfm.github.io/"/>
-  <updated>2014-08-20T09:15:23-06:00</updated>
+  <updated>2014-09-07T18:37:42-06:00</updated>
   <id>http://andresesfm.github.io/</id>
   <author>
     <name><![CDATA[Andres Aguilar]]></name>
@@ -21,88 +21,167 @@
     <content type="html"><![CDATA[<p>When creating a <code>Ref&lt;?&gt;</code> to another object can be tricky since, here is the scenario:</p>
 
 <p>I have an Entity <code>UserPost</code> that has a reference to <code>UserProfile</code> like so:
-&#8220;`java
-@Entity
-public class UserPost {
-    @Id
-    public Long id;</p>
-
-<pre><code>@JsonIgnore
-@Index
-@Load(All.class)
-private Ref&lt;UserProfile&gt; user;
-
-@Ignore
-public String userNickname;
-
-@OnLoad
-public void onLoad(){
-    if(user!=null){
-        UserProfile userProfile = user.get();
-        if (userProfile != null) {
-            this.userNickname = userProfile.userNickname;
-        }
-    }
-}
-
-public void setUserRef(Ref&lt;UserProfile&gt; userRef) {
-    this.user = userRef;
-}
-
-public static class All {
-}
-</code></pre>
-
-<pre><code>The problem then was that `userNickname` was null sometimes even when `user` was being set. After some trial and error I found this post [Google Groups](https://groups.google.com/forum/#!topic/objectify-appengine/TT27QyLGYPI) where they mention the fact that @OnLoad only gets called when the Entity is not found in the session. 
-
-My solution: call onLoad directly when setting the reference. That makes that instance to be usable right away. But at the same it will be loaded when needed.
-</code></pre>
-
-<p>@Entity
-public class UserPost {
-    @Id
-    public Long id;</p>
-
-<pre><code>@JsonIgnore
-@Index
-@Load(All.class)
-private Ref&lt;UserProfile&gt; user;
-
-@Ignore
-public String userNickname;
-
-@OnLoad
-public void onLoad(){
-    if(user!=null){
-        UserProfile userProfile = user.get();
-        if (userProfile != null) {
-            this.userNickname = userProfile.userNickname;
-        }
-    }
-}
-
-public void setUserRef(Ref&lt;UserProfile&gt; userRef) {
-    this.user = userRef;
-    onLoad();
-}
-
-public static class All {
-}
-</code></pre>
-
-<p>&#8220;`</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Using Objectify Alongside JDO]]></title>
-    <link href="http://andresesfm.github.io/blog/2014/07/31/using-objectify-alongside-jdo/"/>
-    <updated>2014-07-31T00:00:00-06:00</updated>
-    <id>http://andresesfm.github.io/blog/2014/07/31/using-objectify-alongside-jdo</id>
-    <content type="html"><![CDATA[<p>When migrating from JDO to Objectify, It&rsquo;s often the case where you need them to co-exist during the transition. Here is my case:</p>
-
-<p>Suppose that you have an entity called <code>UserProfile</code> defined as follows:
-&#8220;`java
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+<span class='line-number'>76</span>
+<span class='line-number'>77</span>
+<span class='line-number'>78</span>
+<span class='line-number'>79</span>
+<span class='line-number'>80</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="nd">@Entity</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">UserPost</span> <span class="o">{</span>
+</span><span class='line'>    <span class="nd">@Id</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">Long</span> <span class="n">id</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="nd">@JsonIgnore</span>
+</span><span class='line'><span class="nd">@Index</span>
+</span><span class='line'><span class="nd">@Load</span><span class="o">(</span><span class="n">All</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
+</span><span class='line'><span class="kd">private</span> <span class="n">Ref</span><span class="o">&amp;</span><span class="n">lt</span><span class="o">;</span><span class="n">UserProfile</span><span class="o">&amp;</span><span class="n">gt</span><span class="o">;</span> <span class="n">user</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nd">@Ignore</span>
+</span><span class='line'><span class="kd">public</span> <span class="n">String</span> <span class="n">userNickname</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nd">@OnLoad</span>
+</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">onLoad</span><span class="o">(){</span>
+</span><span class='line'>    <span class="k">if</span><span class="o">(</span><span class="n">user</span><span class="o">!=</span><span class="kc">null</span><span class="o">){</span>
+</span><span class='line'>        <span class="n">UserProfile</span> <span class="n">userProfile</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="na">get</span><span class="o">();</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">userProfile</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">this</span><span class="o">.</span><span class="na">userNickname</span> <span class="o">=</span> <span class="n">userProfile</span><span class="o">.</span><span class="na">userNickname</span><span class="o">;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">setUserRef</span><span class="o">(</span><span class="n">Ref</span><span class="o">&amp;</span><span class="n">lt</span><span class="o">;</span><span class="n">UserProfile</span><span class="o">&amp;</span><span class="n">gt</span><span class="o">;</span> <span class="n">userRef</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">this</span><span class="o">.</span><span class="na">user</span> <span class="o">=</span> <span class="n">userRef</span><span class="o">;</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">All</span> <span class="o">{</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">The</span> <span class="n">problem</span> <span class="n">then</span> <span class="n">was</span> <span class="n">that</span> <span class="err">`</span><span class="n">userNickname</span><span class="err">`</span> <span class="n">was</span> <span class="kc">null</span> <span class="n">sometimes</span> <span class="n">even</span> <span class="n">when</span> <span class="err">`</span><span class="n">user</span><span class="err">`</span> <span class="n">was</span> <span class="n">being</span> <span class="n">set</span><span class="o">.</span> <span class="n">After</span> <span class="n">some</span> <span class="n">trial</span> <span class="n">and</span> <span class="n">error</span> <span class="n">I</span> <span class="n">found</span> <span class="k">this</span> <span class="n">post</span> <span class="o">[</span><span class="n">Google</span> <span class="n">Groups</span><span class="o">](</span><span class="nl">https:</span><span class="c1">//groups.google.com/forum/#!topic/objectify-appengine/TT27QyLGYPI) where they mention the fact that @OnLoad only gets called when the Entity is not found in the session. </span>
+</span><span class='line'>
+</span><span class='line'><span class="n">My</span> <span class="nl">solution:</span> <span class="n">call</span> <span class="n">onLoad</span> <span class="n">directly</span> <span class="n">when</span> <span class="n">setting</span> <span class="n">the</span> <span class="n">reference</span><span class="o">.</span> <span class="n">That</span> <span class="n">makes</span> <span class="n">that</span> <span class="n">instance</span> <span class="n">to</span> <span class="n">be</span> <span class="n">usable</span> <span class="n">right</span> <span class="n">away</span><span class="o">.</span> <span class="n">But</span> <span class="n">at</span> <span class="n">the</span> <span class="n">same</span> <span class="n">it</span> <span class="n">will</span> <span class="n">be</span> <span class="n">loaded</span> <span class="n">when</span> <span class="n">needed</span><span class="o">.</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="nd">@Entity</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">UserPost</span> <span class="o">{</span>
+</span><span class='line'>    <span class="nd">@Id</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">Long</span> <span class="n">id</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="nd">@JsonIgnore</span>
+</span><span class='line'><span class="nd">@Index</span>
+</span><span class='line'><span class="nd">@Load</span><span class="o">(</span><span class="n">All</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
+</span><span class='line'><span class="kd">private</span> <span class="n">Ref</span><span class="o">&amp;</span><span class="n">lt</span><span class="o">;</span><span class="n">UserProfile</span><span class="o">&amp;</span><span class="n">gt</span><span class="o">;</span> <span class="n">user</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nd">@Ignore</span>
+</span><span class='line'><span class="kd">public</span> <span class="n">String</span> <span class="n">userNickname</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nd">@OnLoad</span>
+</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">onLoad</span><span class="o">(){</span>
+</span><span class='line'>    <span class="k">if</span><span class="o">(</span><span class="n">user</span><span class="o">!=</span><span class="kc">null</span><span class="o">){</span>
+</span><span class='line'>        <span class="n">UserProfile</span> <span class="n">userProfile</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="na">get</span><span class="o">();</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">userProfile</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">this</span><span class="o">.</span><span class="na">userNickname</span> <span class="o">=</span> <span class="n">userProfile</span><span class="o">.</span><span class="na">userNickname</span><span class="o">;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">setUserRef</span><span class="o">(</span><span class="n">Ref</span><span class="o">&amp;</span><span class="n">lt</span><span class="o">;</span><span class="n">UserProfile</span><span class="o">&amp;</span><span class="n">gt</span><span class="o">;</span> <span class="n">userRef</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">this</span><span class="o">.</span><span class="na">user</span> <span class="o">=</span> <span class="n">userRef</span><span class="o">;</span>
+</span><span class='line'>    <span class="n">onLoad</span><span class="o">();</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">All</span> <span class="o">{</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="err">```</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'><span class="o">]]&gt;&lt;/</span><span class="n">content</span><span class="o">&gt;</span>
+</span><span class='line'>  <span class="o">&lt;/</span><span class="n">entry</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="o">&lt;</span><span class="n">entry</span><span class="o">&gt;</span>
+</span><span class='line'>    <span class="o">&lt;</span><span class="n">title</span> <span class="n">type</span><span class="o">=</span><span class="s">&quot;html&quot;</span><span class="o">&gt;&lt;![</span><span class="n">CDATA</span><span class="o">[</span><span class="n">Using</span> <span class="n">Objectify</span> <span class="n">Alongside</span> <span class="n">JDO</span><span class="o">]]&gt;&lt;/</span><span class="n">title</span><span class="o">&gt;</span>
+</span><span class='line'>    <span class="o">&lt;</span><span class="n">link</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;http://andresesfm.github.io/blog/2014/07/31/using-objectify-alongside-jdo/&quot;</span><span class="o">/&gt;</span>
+</span><span class='line'>    <span class="o">&lt;</span><span class="n">updated</span><span class="o">&gt;</span><span class="mi">2014</span><span class="o">-</span><span class="mi">07</span><span class="o">-</span><span class="mi">31</span><span class="nl">T00:</span><span class="mi">00</span><span class="o">:</span><span class="mi">00</span><span class="o">-</span><span class="mi">06</span><span class="o">:</span><span class="mi">00</span><span class="o">&lt;/</span><span class="n">updated</span><span class="o">&gt;</span>
+</span><span class='line'>    <span class="o">&lt;</span><span class="n">id</span><span class="o">&gt;</span><span class="nl">http:</span><span class="c1">//andresesfm.github.io/blog/2014/07/31/using-objectify-alongside-jdo&lt;/id&gt;</span>
+</span><span class='line'>    <span class="o">&lt;</span><span class="n">content</span> <span class="n">type</span><span class="o">=</span><span class="s">&quot;html&quot;</span><span class="o">&gt;&lt;![</span><span class="n">CDATA</span><span class="o">[&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">When</span> <span class="n">migrating</span> <span class="n">from</span> <span class="n">JDO</span> <span class="n">to</span> <span class="n">Objectify</span><span class="o">,</span> <span class="n">It</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="o">;</span><span class="n">s</span> <span class="n">often</span> <span class="n">the</span> <span class="k">case</span> <span class="n">where</span> <span class="n">you</span> <span class="n">need</span> <span class="n">them</span> <span class="n">to</span> <span class="n">co</span><span class="o">-</span><span class="n">exist</span> <span class="n">during</span> <span class="n">the</span> <span class="n">transition</span><span class="o">.</span> <span class="n">Here</span> <span class="n">is</span> <span class="n">my</span> <span class="k">case</span><span class="o">:&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">Suppose</span> <span class="n">that</span> <span class="n">you</span> <span class="n">have</span> <span class="n">an</span> <span class="n">entity</span> <span class="n">called</span> <span class="o">&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">UserProfile</span><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;</span> <span class="n">defined</span> <span class="n">as</span> <span class="nl">follows:</span>
+</span></code></pre></td></tr></table></div></figure>java
 @PersistenceCapable
 public class UserProfile implements Serializable {</p>
 

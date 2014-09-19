@@ -9,9 +9,9 @@
   <meta name="author" content="Andres Aguilar">
 
   
-  <meta name="description" content="Blog Archive 2014 Objectify&#8217;s OnLoad Can Be Tricky
+  <meta name="description" content="Blog Archive 2014 Objectify's OnLoad Can Be Tricky
 Aug 01 2014 posted in google app engine, jdo, objectify Using Objectify Alongside JDO
-Jul &hellip;">
+Jul 31 2014 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -29,10 +29,8 @@ Jul &hellip;">
   <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
   <script src="/javascripts/octopress.js" type="text/javascript"></script>
   <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
-<link href="//fonts.googleapis.com/css?family=Open+Sans:400,700&subset=latin" rel="stylesheet" type="text/css" />
-<link href='http://fonts.googleapis.com/css?family=Noto+Serif:400,700' rel='stylesheet' type='text/css'>
-
-
+<link href='https://fonts.googleapis.com/css?family=Noto+Serif:400,700' rel='stylesheet' type='text/css'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
 
   
   <script type="text/javascript">
@@ -51,15 +49,25 @@ Jul &hellip;">
 </head>
 
 <body   >
-  <nav id="main-nav" role="navigation">
+  <header role="banner"><hgroup>
+  <h1><a href="/">My Tech Blog</a></h1>
+  
+    <h2>Focusing on java technologies.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  
+  
+</ul>
+
 <ul class="main-navigation">
-  <li><a href="/" class="nav-link">Blog</a></li>
-  <li><a href="/blog/archives" class="nav-link">Archives</a></li>
-  <li><a href="/atom.xml" class="nav-link">RSS</a></li>
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
 </ul>
 
 </nav>
-  
   <div id="main">
     <div id="content">
       <div>
@@ -110,14 +118,22 @@ Jul &hellip;">
 
 </div>
 
-<aside class="sidebar">
+  <aside class="sidebar">
+   
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:andresesfm.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
   
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/2014/08/01/objectify-onload-can-be-tricky/">Objectify's OnLoad Can Be Tricky</a>
+        <a href="/blog/2014/08/01/objectify-onload-can-be-tricky/">Objectify&#8217;s OnLoad Can Be Tricky</a>
       </li>
     
       <li class="post">
@@ -133,6 +149,7 @@ Jul &hellip;">
 
   
 </aside>
+
 
 
     </div>
@@ -163,6 +180,27 @@ Jul &hellip;">
 
 
 
+<script>
+  $(document).ready(function() {  
+  var stickyNavTop = $('nav').offset().top;  
+    
+  var stickyNav = function(){  
+  var scrollTop = $(window).scrollTop();  
+         
+  if (scrollTop > stickyNavTop) {   
+      $('nav').addClass('sticky');  
+  } else {  
+      $('nav').removeClass('sticky');   
+  }  
+  };  
+    
+  stickyNav();  
+    
+  $(window).scroll(function() {  
+      stickyNav();  
+  });  
+  });  
+</script>
 
 
 </body>
