@@ -18,7 +18,38 @@ For these tests I used RestAssured. It lets you test web-services from the clien
 ###Step 2: Transform Servlets to Controllers###
 ####Step 2a: Create a one Cotroller per Servlet #####
 Copy and paste the content of get and post###
-In this step pass the SevletRequest and ServletResponse as parameters
+In this step pass the HttpSevletRequest and HttpServletResponse as parameters
+
+```java
+public class HelloWorld extends HttpServlet {
+    public void doGet(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException{
+        ...
+    }
+    public void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException{
+        ...
+    }
+}
+```
+Becomes
+```java
+@RequestMqpping("hello")
+@Controller
+public class HelloWorldController {
+    
+    @RequestStatus(RequestStatus.OK)
+    public void doGet(HttpServletRequest request, HttpServletResponse response)
+        throws Exception{
+        ...
+    }
+    @RequestStatus(RequestStatus.OK)
+    public void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws Exception{
+        ...
+    }
+}
+```
 
 ####Step 2b: Replace Dependencies from ServletRequest and ServletResponse ####
 Pass the parameter types specific to your service.
