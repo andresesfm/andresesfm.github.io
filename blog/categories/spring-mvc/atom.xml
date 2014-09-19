@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Spring Mvc | My Tech Blog]]></title>
+  <link href="http://andresesfm.github.io/blog/categories/spring-mvc/atom.xml" rel="self"/>
+  <link href="http://andresesfm.github.io/"/>
+  <updated>2014-09-18T21:52:17-06:00</updated>
+  <id>http://andresesfm.github.io/</id>
+  <author>
+    <name><![CDATA[Andres Aguilar]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Servlet to Spring MVC Migration Guide]]></title>
+    <link href="http://andresesfm.github.io/blog/2014/09/11/servlet-to-spring-mvc-migration-guide/"/>
+    <updated>2014-09-11T18:44:01-06:00</updated>
+    <id>http://andresesfm.github.io/blog/2014/09/11/servlet-to-spring-mvc-migration-guide</id>
+    <content type="html"><![CDATA[<h2>Introduction</h2>
+
+<p>I recently worked on a migration from good-old servlets web-services project to a REST using Spring MVC. The main motivation for the migration was testability. Servlets made very hard to create a good test suite, not good enough for continious integration. On the other hand Spring MVC not only makes testing posible but enjoyable. I&rsquo;ll briefly layout my strategy and learnings from that project.</p>
+
+<h3>Step 1: Create High-level Http tests</h3>
+
+<p>This step wil save you a lot of time in the long run. They will serve as a verification step.
+For these tests I used RestAssured. It lets you test web-services from the client&rsquo;s perspective. jsonPath makes it easy to verify responses.</p>
+
+<h3>Step 2: Transform Servlets to Controllers</h3>
+
+<h4>Step 2a: Create a one Cotroller per Servlet</h4>
+
+<p>Copy and paste the content of get and post###
+In this step pass the HttpSevletRequest and HttpServletResponse as parameters</p>
+
+<pre><code class="java">public class HelloWorld extends HttpServlet {
+    public void doGet(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException{
+        ...
+    }
+    public void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException{
+        ...
+    }
+}
+</code></pre>
+
+<p>Becomes
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="nd">@RequestMqpping</span><span class="o">(&amp;</span><span class="n">ldquo</span><span class="o">;</span><span class="n">hello</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="o">;)</span>
+</span><span class='line'><span class="nd">@Controller</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">HelloWorldController</span> <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="nd">@RequestStatus</span><span class="o">(</span><span class="n">RequestStatus</span><span class="o">.</span><span class="na">OK</span><span class="o">)</span>
+</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">doGet</span><span class="o">(</span><span class="n">HttpServletRequest</span> <span class="n">request</span><span class="o">,</span> <span class="n">HttpServletResponse</span> <span class="n">response</span><span class="o">)</span>
+</span><span class='line'>    <span class="kd">throws</span> <span class="n">Exception</span><span class="o">{</span>
+</span><span class='line'>    <span class="o">...</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="nd">@RequestStatus</span><span class="o">(</span><span class="n">RequestStatus</span><span class="o">.</span><span class="na">OK</span><span class="o">)</span>
+</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">doPost</span><span class="o">(</span><span class="n">HttpServletRequest</span> <span class="n">request</span><span class="o">,</span> <span class="n">HttpServletResponse</span> <span class="n">response</span><span class="o">)</span>
+</span><span class='line'>        <span class="kd">throws</span> <span class="n">Exception</span><span class="o">{</span>
+</span><span class='line'>    <span class="o">...</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
+</span></code></pre></td></tr></table></div></figure></p>
+
+<h4>Step 2b: Replace Dependencies from ServletRequest and ServletResponse</h4>
+
+<p>Pass the parameter types specific to your service.</p>
+
+<h4>Step 2c: Create Appropriate Return Types</h4>
+
+<p>Split Methods and return the appropriate Object Types</p>
+
+<h3>Step 3: Create Unit Test for Controllers</h3>
+
+<p>Use @RunWithSpring</p>
+
+<h3>Step 4: Integrate Security</h3>
+
+<h3>Step 5: Create Integration Tests</h3>
+
+<p>Use MockMvc</p>
+]]></content>
+  </entry>
+  
+</feed>
