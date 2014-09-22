@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Java | Andres' Tech Blog]]></title>
   <link href="http://andresesfm.github.io/blog/categories/java/atom.xml" rel="self"/>
   <link href="http://andresesfm.github.io/"/>
-  <updated>2014-09-18T21:56:31-06:00</updated>
+  <updated>2014-09-21T19:40:32-06:00</updated>
   <id>http://andresesfm.github.io/</id>
   <author>
     <name><![CDATA[Andres Aguilar]]></name>
@@ -83,13 +83,121 @@ In this step pass the HttpSevletRequest and HttpServletResponse as parameters</p
 </span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
 </span></code></pre></td></tr></table></div></figure></p>
 
-<h4>Step 2b: Replace Dependencies from ServletRequest and ServletResponse</h4>
+<h4>Step 2b: Replace Dependencies to HttpServletRequest</h4>
 
-<p>Pass the parameter types specific to your service.</p>
+<p>Pass the parameter types specific to your service.
+This:
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="nd">@RequestMqpping</span><span class="o">(&amp;</span><span class="n">ldquo</span><span class="o">;</span><span class="n">hello</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="o">;)</span>
+</span><span class='line'><span class="nd">@Controller</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">HelloWorldController</span> <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="nd">@RequestStatus</span><span class="o">(</span><span class="n">RequestStatus</span><span class="o">.</span><span class="na">OK</span><span class="o">)</span>
+</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">doGet</span><span class="o">(</span><span class="n">HttpServletRequest</span> <span class="n">request</span><span class="o">,</span> <span class="n">HttpServletResponse</span> <span class="n">response</span><span class="o">)</span>
+</span><span class='line'>    <span class="kd">throws</span> <span class="n">Exception</span><span class="o">{</span>
+</span><span class='line'>        <span class="n">String</span> <span class="n">name</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="na">getParameter</span><span class="o">(</span><span class="s">&quot;name&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">...</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
+</span></code></pre></td></tr></table></div></figure></p>
 
-<h4>Step 2c: Create Appropriate Return Types</h4>
+<p>Becomes:</p>
 
-<p>Split Methods and return the appropriate Object Types</p>
+<pre><code class="java">@RequestMqpping("hello")
+@Controller
+public class HelloWorldController {
+
+    @RequestStatus(RequestStatus.OK)
+    public void doGet(@RequestParam String name, HttpServletResponse response)
+        throws Exception{
+        ...
+    }
+}
+</code></pre>
+
+<h4>Step 2c: Create appropriate return types and remove dependency to HttpServletResponse</h4>
+
+<p>Split Methods and return the appropriate Object Types
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="nd">@RequestMqpping</span><span class="o">(&amp;</span><span class="n">ldquo</span><span class="o">;</span><span class="n">hello</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="o">;)</span>
+</span><span class='line'><span class="nd">@Controller</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">HelloWorldController</span> <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="nd">@RequestStatus</span><span class="o">(</span><span class="n">RequestStatus</span><span class="o">.</span><span class="na">OK</span><span class="o">)</span>
+</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">doGet</span><span class="o">(</span><span class="nd">@RequestParam</span> <span class="n">String</span> <span class="n">name</span><span class="o">,</span><span class="nd">@RequestParam</span> <span class="n">String</span> <span class="n">action</span><span class="o">,</span> <span class="n">HttpServletResponse</span> <span class="n">response</span><span class="o">)</span>
+</span><span class='line'>    <span class="kd">throws</span> <span class="n">Exception</span><span class="o">{</span>
+</span><span class='line'>    <span class="o">...</span>
+</span><span class='line'>    <span class="n">PrintWriter</span> <span class="n">writer</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="na">getWriter</span><span class="o">();</span>
+</span><span class='line'>    <span class="k">if</span><span class="o">(</span><span class="s">&quot;sayhello&quot;</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">action</span><span class="o">)){</span>
+</span><span class='line'>        <span class="n">writer</span><span class="o">.</span><span class="na">write</span><span class="o">(</span><span class="s">&quot;{message:\&quot;Hello &quot;</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="s">&quot;\&quot;}&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span><span class="k">else</span> <span class="nf">if</span><span class="o">(</span><span class="s">&quot;list&quot;</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">action</span><span class="o">)){</span>
+</span><span class='line'>        <span class="c1">//write a list to writter or with Gson</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="o">...</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
+</span></code></pre></td></tr></table></div></figure>
+Becomes:</p>
+
+<pre><code class="java">@RequestMqpping("hello")
+@Controller
+public class HelloWorldController {
+
+    public static class HelloMessage{
+        public String message;
+    }
+
+    @RequestMapping("" params="action=sayhello")
+    @RequestBody
+    public HelloMessage doGet(@RequestParam String name,@RequestParam String action, HttpServletResponse response)
+        throws Exception{
+            HelloMessage helloMessage = new HelloMessage()
+            helloMessage.message ="Hello " + name );
+    }
+    @RequestMapping("" params="action=list")
+    @RequestStatus(RequestStatus.OK)
+    public List&lt;HelloMessage&gt; doGet(@RequestParam String name,@RequestParam String action, HttpServletResponse response)
+        throws Exception{
+        List&lt;HelloMessage&gt; list = new ArrayList();
+            //build list
+        return list;
+    }
+}
+</code></pre>
 
 <h3>Step 3: Create Unit Test for Controllers</h3>
 

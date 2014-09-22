@@ -170,13 +170,156 @@ In this step pass the HttpSevletRequest and HttpServletResponse as parameters</p
 </span></code></pre></td></tr></table></div></figure>
 
 
-<h4>Step 2b: Replace Dependencies from ServletRequest and ServletResponse</h4>
+<h4>Step 2b: Replace Dependencies to HttpServletRequest</h4>
 
-<p>Pass the parameter types specific to your service.</p>
+<p>Pass the parameter types specific to your service.
+This:</p>
 
-<h4>Step 2c: Create Appropriate Return Types</h4>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="nd">@RequestMqpping</span><span class="o">(</span><span class="s">&quot;hello&quot;</span><span class="o">)</span>
+</span><span class='line'><span class="nd">@Controller</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">HelloWorldController</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@RequestStatus</span><span class="o">(</span><span class="n">RequestStatus</span><span class="o">.</span><span class="na">OK</span><span class="o">)</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">doGet</span><span class="o">(</span><span class="n">HttpServletRequest</span> <span class="n">request</span><span class="o">,</span> <span class="n">HttpServletResponse</span> <span class="n">response</span><span class="o">)</span>
+</span><span class='line'>        <span class="kd">throws</span> <span class="n">Exception</span><span class="o">{</span>
+</span><span class='line'>          <span class="n">String</span> <span class="n">name</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="na">getParameter</span><span class="o">(</span><span class="s">&quot;name&quot;</span><span class="o">);</span>
+</span><span class='line'>        <span class="o">...</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Becomes:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="nd">@RequestMqpping</span><span class="o">(</span><span class="s">&quot;hello&quot;</span><span class="o">)</span>
+</span><span class='line'><span class="nd">@Controller</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">HelloWorldController</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@RequestStatus</span><span class="o">(</span><span class="n">RequestStatus</span><span class="o">.</span><span class="na">OK</span><span class="o">)</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">doGet</span><span class="o">(</span><span class="nd">@RequestParam</span> <span class="n">String</span> <span class="n">name</span><span class="o">,</span> <span class="n">HttpServletResponse</span> <span class="n">response</span><span class="o">)</span>
+</span><span class='line'>        <span class="kd">throws</span> <span class="n">Exception</span><span class="o">{</span>
+</span><span class='line'>        <span class="o">...</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Step 2c: Create appropriate return types and remove dependency to HttpServletResponse</h4>
 
 <p>Split Methods and return the appropriate Object Types</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="nd">@RequestMqpping</span><span class="o">(</span><span class="s">&quot;hello&quot;</span><span class="o">)</span>
+</span><span class='line'><span class="nd">@Controller</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">HelloWorldController</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@RequestStatus</span><span class="o">(</span><span class="n">RequestStatus</span><span class="o">.</span><span class="na">OK</span><span class="o">)</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">doGet</span><span class="o">(</span><span class="nd">@RequestParam</span> <span class="n">String</span> <span class="n">name</span><span class="o">,</span><span class="nd">@RequestParam</span> <span class="n">String</span> <span class="n">action</span><span class="o">,</span> <span class="n">HttpServletResponse</span> <span class="n">response</span><span class="o">)</span>
+</span><span class='line'>        <span class="kd">throws</span> <span class="n">Exception</span><span class="o">{</span>
+</span><span class='line'>        <span class="o">...</span>
+</span><span class='line'>        <span class="n">PrintWriter</span> <span class="n">writer</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="na">getWriter</span><span class="o">();</span>
+</span><span class='line'>        <span class="k">if</span><span class="o">(</span><span class="s">&quot;sayhello&quot;</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">action</span><span class="o">)){</span>
+</span><span class='line'>            <span class="n">writer</span><span class="o">.</span><span class="na">write</span><span class="o">(</span><span class="s">&quot;{message:\&quot;Hello &quot;</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="s">&quot;\&quot;}&quot;</span><span class="o">);</span>
+</span><span class='line'>        <span class="o">}</span><span class="k">else</span> <span class="nf">if</span><span class="o">(</span><span class="s">&quot;list&quot;</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">action</span><span class="o">)){</span>
+</span><span class='line'>            <span class="c1">//write a list to writter or with Gson</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="o">...</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Becomes:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="nd">@RequestMqpping</span><span class="o">(</span><span class="s">&quot;hello&quot;</span><span class="o">)</span>
+</span><span class='line'><span class="nd">@Controller</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">HelloWorldController</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">HelloMessage</span><span class="o">{</span>
+</span><span class='line'>      <span class="kd">public</span> <span class="n">String</span> <span class="n">message</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@RequestMapping</span><span class="o">(</span><span class="s">&quot;&quot;</span> <span class="n">params</span><span class="o">=</span><span class="s">&quot;action=sayhello&quot;</span><span class="o">)</span>
+</span><span class='line'>    <span class="nd">@RequestBody</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">HelloMessage</span> <span class="nf">doGet</span><span class="o">(</span><span class="nd">@RequestParam</span> <span class="n">String</span> <span class="n">name</span><span class="o">,</span><span class="nd">@RequestParam</span> <span class="n">String</span> <span class="n">action</span><span class="o">,</span> <span class="n">HttpServletResponse</span> <span class="n">response</span><span class="o">)</span>
+</span><span class='line'>        <span class="kd">throws</span> <span class="n">Exception</span><span class="o">{</span>
+</span><span class='line'>          <span class="n">HelloMessage</span> <span class="n">helloMessage</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">HelloMessage</span><span class="o">()</span>
+</span><span class='line'>            <span class="n">helloMessage</span><span class="o">.</span><span class="na">message</span> <span class="o">=</span><span class="s">&quot;Hello &quot;</span> <span class="o">+</span> <span class="n">name</span> <span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="nd">@RequestMapping</span><span class="o">(</span><span class="s">&quot;&quot;</span> <span class="n">params</span><span class="o">=</span><span class="s">&quot;action=list&quot;</span><span class="o">)</span>
+</span><span class='line'>    <span class="nd">@RequestStatus</span><span class="o">(</span><span class="n">RequestStatus</span><span class="o">.</span><span class="na">OK</span><span class="o">)</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">HelloMessage</span><span class="o">&gt;</span> <span class="nf">doGet</span><span class="o">(</span><span class="nd">@RequestParam</span> <span class="n">String</span> <span class="n">name</span><span class="o">,</span><span class="nd">@RequestParam</span> <span class="n">String</span> <span class="n">action</span><span class="o">,</span> <span class="n">HttpServletResponse</span> <span class="n">response</span><span class="o">)</span>
+</span><span class='line'>        <span class="kd">throws</span> <span class="n">Exception</span><span class="o">{</span>
+</span><span class='line'>        <span class="n">List</span><span class="o">&lt;</span><span class="n">HelloMessage</span><span class="o">&gt;</span> <span class="n">list</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">ArrayList</span><span class="o">();</span>
+</span><span class='line'>            <span class="c1">//build list</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">list</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
 
 <h3>Step 3: Create Unit Test for Controllers</h3>
 
