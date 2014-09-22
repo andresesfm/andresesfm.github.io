@@ -51,11 +51,88 @@ public class HelloWorldController {
 }
 ```
 
-####Step 2b: Replace Dependencies from ServletRequest and ServletResponse ####
+####Step 2b: Replace Dependencies to HttpServletRequest  ####
 Pass the parameter types specific to your service.
+This:
+```java
+@RequestMqpping("hello")
+@Controller
+public class HelloWorldController {
+    
+    @RequestStatus(RequestStatus.OK)
+    public void doGet(HttpServletRequest request, HttpServletResponse response)
+        throws Exception{
+        	String name = request.getParameter("name");
+        ...
+    }
+    
+}
+```
 
-####Step 2c: Create Appropriate Return Types ####
+Becomes:
+
+```java
+@RequestMqpping("hello")
+@Controller
+public class HelloWorldController {
+    
+    @RequestStatus(RequestStatus.OK)
+    public void doGet(@RequestParam String name, HttpServletResponse response)
+        throws Exception{
+        ...
+    }
+}
+```
+
+####Step 2c: Create appropriate return types and remove dependency to HttpServletResponse ####
 Split Methods and return the appropriate Object Types
+```java
+@RequestMqpping("hello")
+@Controller
+public class HelloWorldController {
+    
+    @RequestStatus(RequestStatus.OK)
+    public void doGet(@RequestParam String name,@RequestParam String action, HttpServletResponse response)
+        throws Exception{
+        ...
+        PrintWriter writer = response.getWriter();
+        if("sayhello".equals(action)){
+            writer.write("{message:\"Hello " + name + "\"}");
+        }else if("list".equals(action)){
+            //write a list to writter or with Gson
+        }
+        ...
+    }
+}
+```
+Becomes:
+
+```java
+@RequestMqpping("hello")
+@Controller
+public class HelloWorldController {
+    
+    public static class HelloMessage{
+    	public String message;
+    }
+
+    @RequestMapping("" params="action=sayhello")
+    @RequestBody
+    public HelloMessage doGet(@RequestParam String name,@RequestParam String action, HttpServletResponse response)
+        throws Exception{
+        	HelloMessage helloMessage = new HelloMessage()
+            helloMessage.message ="Hello " + name );
+    }
+    @RequestMapping("" params="action=list")
+    @RequestStatus(RequestStatus.OK)
+    public List<HelloMessage> doGet(@RequestParam String name,@RequestParam String action, HttpServletResponse response)
+        throws Exception{
+        List<HelloMessage> list = new ArrayList();
+            //build list
+        return list;
+    }
+}
+```
 
 ###Step 3: Create Unit Test for Controllers ####
 Use @RunWithSpring
