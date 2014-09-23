@@ -304,7 +304,7 @@ This:</p>
 </span><span class='line'>    <span class="o">}</span>
 </span><span class='line'>
 </span><span class='line'>    <span class="nd">@RequestMapping</span><span class="o">(</span><span class="s">&quot;&quot;</span> <span class="n">params</span><span class="o">=</span><span class="s">&quot;action=sayhello&quot;</span><span class="o">)</span>
-</span><span class='line'>    <span class="nd">@RequestBody</span>
+</span><span class='line'>    <span class="nd">@ResponseBody</span>
 </span><span class='line'>    <span class="kd">public</span> <span class="n">HelloMessage</span> <span class="nf">sayHello</span><span class="o">(</span><span class="nd">@RequestParam</span> <span class="n">String</span> <span class="n">name</span><span class="o">)</span>
 </span><span class='line'>        <span class="kd">throws</span> <span class="n">Exception</span><span class="o">{</span>
 </span><span class='line'>          <span class="n">HelloMessage</span> <span class="n">helloMessage</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">HelloMessage</span><span class="o">()</span>
@@ -312,7 +312,7 @@ This:</p>
 </span><span class='line'>            <span class="k">return</span> <span class="n">helloMessage</span><span class="o">;</span>
 </span><span class='line'>    <span class="o">}</span>
 </span><span class='line'>    <span class="nd">@RequestMapping</span><span class="o">(</span><span class="s">&quot;&quot;</span> <span class="n">params</span><span class="o">=</span><span class="s">&quot;action=list&quot;</span><span class="o">)</span>
-</span><span class='line'>    <span class="nd">@RequestBody</span>
+</span><span class='line'>    <span class="nd">@ResponseBody</span>
 </span><span class='line'>    <span class="kd">public</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">HelloMessage</span><span class="o">&gt;</span> <span class="nf">list</span><span class="o">()</span>
 </span><span class='line'>        <span class="kd">throws</span> <span class="n">Exception</span><span class="o">{</span>
 </span><span class='line'>        <span class="n">List</span><span class="o">&lt;</span><span class="n">HelloMessage</span><span class="o">&gt;</span> <span class="n">list</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">ArrayList</span><span class="o">();</span>
