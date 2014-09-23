@@ -117,7 +117,7 @@ public class HelloWorldController {
     }
 
     @RequestMapping("" params="action=sayhello")
-    @RequestBody
+    @ResponseBody
     public HelloMessage sayHello(@RequestParam String name)
         throws Exception{
         	HelloMessage helloMessage = new HelloMessage()
@@ -125,7 +125,7 @@ public class HelloWorldController {
             return helloMessage;
     }
     @RequestMapping("" params="action=list")
-    @RequestStatus(RequestStatus.OK)
+    @ResponseBody
     public List<HelloMessage> list()
         throws Exception{
         List<HelloMessage> list = new ArrayList();
