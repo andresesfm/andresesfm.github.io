@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Spring Mvc | Andres' Tech Blog]]></title>
   <link href="http://andresesfm.github.io/blog/categories/spring-mvc/atom.xml" rel="self"/>
   <link href="http://andresesfm.github.io/"/>
-  <updated>2014-09-21T19:40:32-06:00</updated>
+  <updated>2014-09-22T20:27:59-06:00</updated>
   <id>http://andresesfm.github.io/</id>
   <author>
     <name><![CDATA[Andres Aguilar]]></name>
@@ -183,14 +183,15 @@ public class HelloWorldController {
 
     @RequestMapping("" params="action=sayhello")
     @RequestBody
-    public HelloMessage doGet(@RequestParam String name,@RequestParam String action, HttpServletResponse response)
+    public HelloMessage sayHello(@RequestParam String name)
         throws Exception{
             HelloMessage helloMessage = new HelloMessage()
             helloMessage.message ="Hello " + name );
+            return helloMessage;
     }
     @RequestMapping("" params="action=list")
     @RequestStatus(RequestStatus.OK)
-    public List&lt;HelloMessage&gt; doGet(@RequestParam String name,@RequestParam String action, HttpServletResponse response)
+    public List&lt;HelloMessage&gt; list(@RequestParam String name)
         throws Exception{
         List&lt;HelloMessage&gt; list = new ArrayList();
             //build list
