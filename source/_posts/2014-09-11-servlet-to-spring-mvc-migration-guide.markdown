@@ -118,14 +118,15 @@ public class HelloWorldController {
 
     @RequestMapping("" params="action=sayhello")
     @RequestBody
-    public HelloMessage doGet(@RequestParam String name,@RequestParam String action, HttpServletResponse response)
+    public HelloMessage sayHello(@RequestParam String name)
         throws Exception{
         	HelloMessage helloMessage = new HelloMessage()
             helloMessage.message ="Hello " + name );
+            return helloMessage;
     }
     @RequestMapping("" params="action=list")
     @RequestStatus(RequestStatus.OK)
-    public List<HelloMessage> doGet(@RequestParam String name,@RequestParam String action, HttpServletResponse response)
+    public List<HelloMessage> list(@RequestParam String name)
         throws Exception{
         List<HelloMessage> list = new ArrayList();
             //build list
