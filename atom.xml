@@ -4,7 +4,7 @@
   <title><![CDATA[Andres' Tech Blog]]></title>
   <link href="http://andresesfm.github.io/atom.xml" rel="self"/>
   <link href="http://andresesfm.github.io/"/>
-  <updated>2014-09-22T20:27:59-06:00</updated>
+  <updated>2014-09-22T20:34:51-06:00</updated>
   <id>http://andresesfm.github.io/</id>
   <author>
     <name><![CDATA[Andres Aguilar]]></name>
@@ -235,7 +235,7 @@ This:</p>
 </span><span class='line'>    <span class="o">}</span>
 </span><span class='line'>    <span class="nd">@RequestMapping</span><span class="o">(</span><span class="s">&quot;&quot;</span> <span class="n">params</span><span class="o">=</span><span class="s">&quot;action=list&quot;</span><span class="o">)</span>
 </span><span class='line'>    <span class="nd">@RequestStatus</span><span class="o">(</span><span class="n">RequestStatus</span><span class="o">.</span><span class="na">OK</span><span class="o">)</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">HelloMessage</span><span class="o">&gt;</span> <span class="nf">list</span><span class="o">(</span><span class="nd">@RequestParam</span> <span class="n">String</span> <span class="n">name</span><span class="o">)</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">HelloMessage</span><span class="o">&gt;</span> <span class="nf">list</span><span class="o">()</span>
 </span><span class='line'>        <span class="kd">throws</span> <span class="n">Exception</span><span class="o">{</span>
 </span><span class='line'>        <span class="n">List</span><span class="o">&lt;</span><span class="n">HelloMessage</span><span class="o">&gt;</span> <span class="n">list</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">ArrayList</span><span class="o">();</span>
 </span><span class='line'>            <span class="c1">//build list</span>
