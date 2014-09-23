@@ -126,7 +126,7 @@ public class HelloWorldController {
     }
     @RequestMapping("" params="action=list")
     @RequestStatus(RequestStatus.OK)
-    public List<HelloMessage> list(@RequestParam String name)
+    public List<HelloMessage> list()
         throws Exception{
         List<HelloMessage> list = new ArrayList();
             //build list
